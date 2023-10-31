@@ -1,13 +1,14 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import RedirectResponse
+from starlette.responses import HTMLResponse
 
 app = FastAPI()
 
 
-@app.get('/')
-async def root():
-    return "Welcome to the swagger API!"
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    return RedirectResponse(url="/docs")
 
 
 @app.get("/github")
@@ -31,7 +32,8 @@ def custom_openapi():
     openapi_schema = get_openapi(
         title="Swagger API",
         version="1.0.0",
-        description="Swagger API with Redirect URLs",
+        description="Swagger about me, please erase /docs in the address bar and add /github , /telegram or /hh "
+                    "to go to my github, telegram or headhunter",
         routes=app.routes,
     )
     app.openapi_schema = openapi_schema
